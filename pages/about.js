@@ -10,7 +10,7 @@ export default function Home() {
 
       <main>
         <h1>
-          Welcome
+          about page
         </h1>
       </main>
     </div>
