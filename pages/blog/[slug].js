@@ -1,5 +1,6 @@
 import Head from 'next/head';
-import { blogPosts } from '../../lib/data'
+import { blogPosts } from '../../lib/data';
+import { format, parseISO } from 'date-fns';
 
 // here we have the return object 'props' of 'getStaticProps' fonction .
 // Two solution , declare this props like (props) or destructure ({ title, content, date })
@@ -13,9 +14,10 @@ export default function BlogPage({ title, content, date }) {
       </Head>
 
       <main>
-        <h1>
-          {title}
-        </h1>
+        <div className="border-b-2 border-gray-200 mb-6">
+          <h2 className="text-3xl font-bold">{title}</h2>
+          <div className="text-gray-600 text-xs">{format(parseISO(date), 'MMMM do, uuu')}</div>
+        </div>
         <p>{content}</p>
       </main>
     </div>
