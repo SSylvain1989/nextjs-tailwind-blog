@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { blogPosts } from '../../lib/data';
+import { blogPosts, getAllPosts } from '../../lib/data';
 import { format, parseISO } from 'date-fns';
 
 // here we have the return object 'props' of 'getStaticProps' fonction .
@@ -37,6 +37,7 @@ export async function getStaticProps(context) {
 // It may be called again, on a serverless function, if
 // the path has not been generated.
 export async function getStaticPaths() {
+  getAllPosts();
   // Get the paths we want to pre-render based on posts
   return {
     paths: blogPosts.map((post) => ({

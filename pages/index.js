@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import {blogPosts} from '../lib/data';
+// import {blogPosts} from '../lib/data';
 import { format, parseISO } from 'date-fns';
 import Link from 'next/link';
 
@@ -12,16 +12,16 @@ export default function Home() {
       </Head>
 
       <div className="space-y-4">
-        {blogPosts.map((post) => (
+        {/* {blogPosts.map((post) => (
           <ListBlogPost key={post.slug} {...post} />
-        ))}
+        ))} */}
       </div>
     </div>
   );
 }
 
 // need to do a component here *****
-function ListBlogPost({slug, content, date, title}) {
+function ListBlogPost({ slug, content, date, title }) {
   return (
     <div className="border border-black-400 shadow hover:shadow-md rounded-md p-4 transition duration-200 ease-in">
       <div>
