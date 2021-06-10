@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { blogPosts, getAllPosts } from '../../lib/data';
+import { getAllPosts } from '../../lib/data';
 import { format, parseISO } from 'date-fns';
 
 // here we have the return object 'props' of 'getStaticProps' fonction .
@@ -16,7 +16,7 @@ export default function BlogPage({ title, content, date }) {
       <main>
         <div className="border-b-2 border-gray-200 mb-6">
           <h2 className="text-3xl font-bold">{title}</h2>
-          <div className="text-gray-600 text-xs">{format(parseISO(date), 'MMMM do, uuu')}</div>
+          {/* <div className="text-gray-600 text-xs">{format(parseISO(date), 'MMMM do, uuu')}</div> */}
         </div>
         <p>{content}</p>
       </main>
@@ -25,11 +25,15 @@ export default function BlogPage({ title, content, date }) {
 }
 
 export async function getStaticProps(context) {
-  console.log('hi', context);
   const { params } = context;
+  // we import all the post with getAllPosts fonction now we can't and we won't import them from the server 
+  const allPosts = getAllPosts();
+  const content = allPosts.find(post => post.slug === params.slug)
   return {
-    // i will find the post that match with the slug , with the find methode and will return all props of the post ( title, slug, date , content ...)
-    props: blogPosts.find((post) => post.slug === params.slug), // will be passed to the page component as props
+    props: {
+      ...JSON.stringify(content.data), // we must stringify ( put in string ) this one because content.data contain title AND date and date not a string
+      content: content.content,
+    }
   }
 }
 
@@ -37,10 +41,10 @@ export async function getStaticProps(context) {
 // It may be called again, on a serverless function, if
 // the path has not been generated.
 export async function getStaticPaths() {
-  getAllPosts();
+
   // Get the paths we want to pre-render based on posts
   return {
-    paths: blogPosts.map((post) => ({
+    paths: getAllPosts().map((post) => ({
       params: {
         slug: post.slug,
       },
