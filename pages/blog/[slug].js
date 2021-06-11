@@ -1,12 +1,15 @@
 import Head from 'next/head';
 import { getAllPosts } from '../../lib/data';
+// import { hydrate, renderToString } from 'next-mdx-remote'
+import renderToString from 'next-mdx-remote/render-to-string';
+import hydrate from 'next-mdx-remote/hydrate';
 import { format, parseISO } from 'date-fns';
 
 // here we have the return object 'props' of 'getStaticProps' fonction .
 // Two solution , declare this props like (props) or destructure ({ title, content, date })
 // to make it easier to use , we destrure the props object directly
-export default function BlogPage(props) {
-  const { title, content, date } = props
+export default function BlogPage({ title, content, date }) {
+  const hydrateContent = hydrate(content)
   return (
     <div>
       <Head>
@@ -18,7 +21,7 @@ export default function BlogPage(props) {
           <h2 className="text-3xl font-bold">{title}</h2>
           <div className="text-gray-600 text-xs">{format(parseISO(date), 'MMMM do, uuu')}</div>
         </div>
-        <p>{content}</p>
+        <div className="prose">{hydrateContent}</div>
       </main>
     </div>
   );
@@ -28,12 +31,13 @@ export async function getStaticProps(context) {
   const { params } = context;
   // we import all the post with getAllPosts fonction now we can't and we won't import them from the server 
   const allPosts = getAllPosts();
-  const { data, content } = allPosts.find(post => post.slug === params.slug)
+  const { data, content } = allPosts.find(post => post.slug === params.slug);
+  const mdxSource = await renderToString(content); // one param : source , here is the "content markdown"
   return {
     props: {
       ...data, // we must stringify ( put in string ) this one because content.data contain title AND date and date not a string
       date: data.date.toISOString(),
-      content,
+      content: mdxSource,
     }
   }
 }
