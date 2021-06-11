@@ -1,6 +1,5 @@
 import Head from 'next/head';
 import { getAllPosts } from '../../lib/data';
-// import { hydrate, renderToString } from 'next-mdx-remote'
 import renderToString from 'next-mdx-remote/render-to-string';
 import hydrate from 'next-mdx-remote/hydrate';
 import { format, parseISO } from 'date-fns';

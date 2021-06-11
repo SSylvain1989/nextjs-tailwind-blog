@@ -1,7 +1,8 @@
 import Head from 'next/head';
-import { getAllPosts } from '../lib/data';
 import { format, parseISO } from 'date-fns';
+import hydrate from 'next-mdx-remote/hydrate';
 import Link from 'next/link';
+import { getAllPosts } from '../lib/data';
 
 export default function Home({ posts }) {
   return (
@@ -39,6 +40,7 @@ export async function getStaticProps() {
 
 // need to do a component here *****
 function ListBlogPost({ slug, content, date, title }) {
+
   return (
     <div className="border border-black-400 shadow hover:shadow-md rounded-md p-4 transition duration-200 ease-in">
       <div>
@@ -50,7 +52,7 @@ function ListBlogPost({ slug, content, date, title }) {
       <div className="text-gray-600 text-xs">
         {format(parseISO(date), 'MMMM do, uuu')}
       </div>
-      <div>{content}</div>
+      <div className="prose">{content.substr(0, 230)}</div>
     </div>
   )
 };
