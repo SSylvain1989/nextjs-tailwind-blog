@@ -1,9 +1,9 @@
 import Head from 'next/head';
-import { getAllPosts } from '../../lib/data';
-// import { format, parseISO } from 'date-fns';
+import { getAllPosts } from '../lib/data';
+import { format, parseISO } from 'date-fns';
 import Link from 'next/link';
 
-export default function Home() {
+export default function Home({ posts }) {
   return (
     <div>
       <Head>
@@ -12,28 +12,29 @@ export default function Home() {
       </Head>
 
       <div className="space-y-4">
-        {/* {blogPosts.map((post) => (
-          <ListBlogPost key={post.slug} {...post} />
-        ))} */}
+        {posts.map((post) => (
+          <ListBlogPost key={post.title} {...post} />
+        ))}
       </div>
     </div>
   );
 }
 
-export async function getStaticProps(context) {
-  const { params } = context;
-  // we import all the post with getAllPosts fonction now we can't and we won't import them from the server 
+// 
+export async function getStaticProps() {
+  // we import all the post with getAllPosts fonction now we can't and we won't import them from the client 
   const allPosts = getAllPosts();
-  // const {data, content} = allPosts.find(post => post.slug === params.slug)
   return {
     props: {
-      posts : allPosts.map(({data, content }) => ({
+      posts: allPosts.map(({ data, content, slug }) => ({
         ...data, // we must stringify ( put in string ) this one because content.data contain title AND date and date not a string
         date: data.date.toISOString(),
         content,
+        slug,
       })),
     },
   };
+}
 
 
 // need to do a component here *****
@@ -46,7 +47,10 @@ function ListBlogPost({ slug, content, date, title }) {
         </Link>
       </div>
       {/* parse the date as a string and decide the format of the date */}
+      <div className="text-gray-600 text-xs">
+        {format(parseISO(date), 'MMMM do, uuu')}
+      </div>
       <div>{content}</div>
     </div>
-  );
-}
+  )
+};
